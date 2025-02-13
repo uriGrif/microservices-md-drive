@@ -1,0 +1,21 @@
+[
+	{
+		"name": "service1",
+		"targets": [
+			{
+				"url": "localhost:9000/",
+				"weight": 100
+			}
+		],
+		"loadBalancer": "default",
+		"routes": [
+			{
+				"endpoint": "/hola/",
+				"authenticator": "auth0"
+			},
+			{
+				"endpoint": "/chau/"
+			}
+		]
+	}
+]

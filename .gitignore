@@ -1,0 +1,7 @@
+# general
+.env
+/secrets
+
+# some local dev files and folders
+design.drawio
+/test-service
