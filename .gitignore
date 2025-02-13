@@ -1,6 +1,7 @@
 # general
 .env
 /secrets
+*.exe
 
 # some local dev files and folders
 design.drawio
