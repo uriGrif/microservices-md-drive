@@ -1,0 +1,56 @@
+version: "3.8"
+
+services:
+    api-gateway:
+        build:
+            context: ./api-gateway
+        ports:
+            - "8080:8080"
+        depends_on:
+            - profile-service
+        env_file: "./api-gateway/.env"
+        volumes:
+            - ./api-gateway/config:/app/config:ro
+
+    profile-service:
+        build:
+            context: ./profile-service
+        expose:
+            - "9000"
+        depends_on:
+            - profile-db
+        env_file: "./profile-service/.env"
+        secrets:
+            - profile_mysql_password
+        environment:
+            - DB_PASSWORD_FILE=/run/secrets/profile_mysql_password
+        deploy:
+            restart_policy: # might fail if the profile-db isn't fully up
+                condition: on-failure
+                delay: 5s
+                max_attempts: 3
+
+    web-client:
+        build:
+            context: ./web-client
+        ports:
+            - "5173:80"
+        depends_on:
+            - api-gateway
+        env_file: "./web-client/.env"
+
+    profile-db:
+        image: mysql
+        expose:
+            - "3306"
+        secrets:
+            - profile_mysql_password
+        environment:
+            - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/profile_mysql_password
+            - MYSQL_DATABASE=profilesdb
+        volumes:
+            - ./volumes/profile-db-data:/var/lib/mysql
+
+secrets:
+    profile_mysql_password:
+        file: ./secrets/profile_mysql_password

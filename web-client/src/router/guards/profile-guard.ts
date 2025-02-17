@@ -5,7 +5,7 @@ import type { NavigationGuard } from "vue-router";
 import { getProfile } from "../../services/profiles";
 import { profileStore } from "../../stores/profile";
 
-const profileGuard: NavigationGuard = async (to, from, next) => {
+const profileGuard: NavigationGuard = async (to, _from, next) => {
 	const { isAuthenticated, user, isLoading } = useAuth0();
 
 	// Wait for isLoading to become false

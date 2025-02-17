@@ -1,6 +1,7 @@
 # general
 .env
 /secrets
+/volumes
 *.exe
 
 # some local dev files and folders

@@ -49,7 +49,7 @@ func (a *Auth0Authenticator) Authenticate(r *http.Request) error {
 	// validate
 	claims, err := jwtValidator.ValidateToken(r.Context(), token)
 	if err != nil {
-		return errors.New("invalid token")
+		return errors.New("invalid token: " + err.Error())
 	}
 
 	validatedClaims, ok := claims.(*validator.ValidatedClaims)

@@ -35,3 +35,5 @@ mvnw.cmd
 
 ### VS Code ###
 .vscode/
+
+.env

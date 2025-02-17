@@ -3,18 +3,25 @@
 		"name": "service1",
 		"targets": [
 			{
-				"url": "localhost:9000/",
+				"url": "http://profile-service:9000/",
 				"weight": 100
 			}
 		],
 		"loadBalancer": "default",
 		"routes": [
 			{
-				"endpoint": "/hola/",
+				"endpoint": "/profile",
 				"authenticator": "auth0"
 			},
 			{
-				"endpoint": "/chau/"
+				"endpoint": "/profile/",
+				"authenticator": "auth0"
+			},
+			{
+				"endpoint": "GET /profile/{id}"
+			},
+			{
+				"endpoint": "GET /profile/search-profile"
 			}
 		]
 	}
