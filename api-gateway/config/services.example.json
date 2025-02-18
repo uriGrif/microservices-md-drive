@@ -10,18 +10,18 @@
 		"loadBalancer": "default",
 		"routes": [
 			{
-				"endpoint": "/profile",
+				"endpoint": "/profiles",
 				"authenticator": "auth0"
 			},
 			{
-				"endpoint": "/profile/",
+				"endpoint": "/profiles/",
 				"authenticator": "auth0"
 			},
 			{
-				"endpoint": "GET /profile/{id}"
+				"endpoint": "GET /profiles/{id}"
 			},
 			{
-				"endpoint": "GET /profile/search-profile"
+				"endpoint": "GET /profiles/search-profile"
 			}
 		]
 	}
