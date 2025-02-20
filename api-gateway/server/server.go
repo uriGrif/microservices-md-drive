@@ -1,6 +1,7 @@
 package server
 
 import (
+	"api-gateway/middleware/auth"
 	"io"
 	"net/http"
 	"os"
@@ -8,7 +9,7 @@ import (
 	"github.com/rs/cors"
 )
 
-func Run() {
+func Run(authenticators map[string]auth.Authenticator) {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -19,7 +20,7 @@ func Run() {
 		io.WriteString(w, "Hello World!")
 	})
 
-	registerRoutes(mux)
+	registerRoutes(mux, authenticators)
 
 	server := http.Server{
 		Addr:    ":" + os.Getenv("PORT"),

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"api-gateway/middleware/auth"
 	"api-gateway/server"
 	"log"
 
@@ -15,6 +16,9 @@ func main() {
 		log.Println(".env file was not found")
 	}
 
+	// generate default authenticators
+	authenticators := auth.GetDefaultAuthenticators()
+
 	// init server
-	server.Run()
+	server.Run(authenticators)
 }

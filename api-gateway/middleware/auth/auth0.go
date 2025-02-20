@@ -63,15 +63,9 @@ func (a *Auth0Authenticator) Authenticate(r *http.Request) error {
 	return nil
 }
 
-var authenticator *Auth0Authenticator = nil
-
-func GetAuth0Authenticator() *Auth0Authenticator {
-	if authenticator != nil {
-		return authenticator
-	}
-	authenticator = &Auth0Authenticator{
+func NewAuth0Authenticator() *Auth0Authenticator {
+	return &Auth0Authenticator{
 		domain:   os.Getenv("AUTH0_DOMAIN"),
 		audience: os.Getenv("AUTH0_AUDIENCE"),
 	}
-	return authenticator
 }

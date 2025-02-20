@@ -21,3 +21,9 @@ func Middleware(a Authenticator) middleware.Middleware {
 		})
 	}
 }
+
+func GetDefaultAuthenticators() map[string]Authenticator {
+	auths := make(map[string]Authenticator)
+	auths["auth0"] = NewAuth0Authenticator()
+	return auths
+}

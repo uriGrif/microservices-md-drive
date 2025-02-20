@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func registerRoutes(mux *http.ServeMux) {
+func registerRoutes(mux *http.ServeMux, authenticators map[string]auth.Authenticator) {
 	services := services.LoadServices()
 
 	for _, s := range services {
@@ -14,7 +14,7 @@ func registerRoutes(mux *http.ServeMux) {
 			proxy := CreateProxy(s.LoadBalancer)
 			var handler http.Handler = &proxy
 			if r.Authenticator != nil {
-				handler = auth.Middleware(r.Authenticator)(&proxy)
+				handler = auth.Middleware(authenticators[*r.Authenticator])(&proxy)
 			}
 			mux.Handle(r.Endpoint, handler)
 		}
