@@ -2,23 +2,17 @@ package server
 
 import (
 	"api-gateway/middleware/auth"
-	"io"
 	"net/http"
 	"os"
 
 	"github.com/rs/cors"
 )
 
-func Run(authenticators map[string]auth.Authenticator) {
+func Run() {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/" {
-			http.NotFound(w, r)
-			return
-		}
-		io.WriteString(w, "Hello World!")
-	})
+	// generate default authenticators
+	authenticators := auth.GetDefaultAuthenticators()
 
 	registerRoutes(mux, authenticators)
 

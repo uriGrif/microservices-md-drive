@@ -30,6 +30,28 @@ services:
                 delay: 5s
                 max_attempts: 3
 
+    permissions-service-grpc:
+        image: permissions-service-grpc
+        build:
+            context: ./permission-service
+            target: permissions-service-grpc
+        expose:
+            - "50051"
+        depends_on:
+            - permissions-db
+        env_file: "./permission-service/.env"
+
+    permissions-service-gateway:
+        image: permissions-service-gateway
+        build:
+            context: ./permission-service
+            target: permissions-service-gateway
+        expose:
+            - "50051"
+        depends_on:
+            - permissions-db
+        env_file: "./permission-service/.env"
+
     web-client:
         build:
             context: ./web-client
@@ -50,6 +72,17 @@ services:
             - MYSQL_DATABASE=profilesdb
         volumes:
             - ./volumes/profile-db-data:/var/lib/mysql
+
+    permissions-db:
+        image: permissions-db
+        build:
+            context: ./permission-service
+            target: permissions-db
+        expose:
+            - "5432"
+        env_file: "./permission-service/.env"
+        volumes:
+            - ./volumes/permissions-db-data:/var/lib/postgresql/data
 
 secrets:
     profile_mysql_password:
