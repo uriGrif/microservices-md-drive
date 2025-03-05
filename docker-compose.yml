@@ -40,6 +40,11 @@ services:
         depends_on:
             - permissions-db
         env_file: "./permission-service/.env"
+        deploy:
+            restart_policy: # might fail if the profile-db isn't fully up
+                condition: on-failure
+                delay: 5s
+                max_attempts: 3
 
     permissions-service-gateway:
         image: permissions-service-gateway
@@ -47,9 +52,10 @@ services:
             context: ./permission-service
             target: permissions-service-gateway
         expose:
-            - "50051"
+            - "9001"
         depends_on:
             - permissions-db
+            - permissions-service-grpc
         env_file: "./permission-service/.env"
 
     web-client:

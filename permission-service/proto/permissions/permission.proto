@@ -67,7 +67,7 @@ service PermissionService {
     rpc CreatePermission(CreatePermissionRequest) returns (CreatePermissionResponse) {
         option (google.api.http) = {
             post: "/permissions"
-            body: "*"
+            body: "permission"
         };
     }
     rpc GetPermission(GetPermissionRequest) returns (GetPermissionResponse) {
@@ -83,7 +83,7 @@ service PermissionService {
     rpc UpdatePermission(UpdatePermissionRequest) returns (UpdatePermissionResponse) {
         option (google.api.http) = {
             put: "/permissions/{permission.file_id}/{permission.user_id}"
-            body: "*"
+            body: "permission"
         };
     }
     rpc DeletePermission(DeletePermissionRequest) returns (DeletePermissionResponse) {

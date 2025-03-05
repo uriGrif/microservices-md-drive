@@ -40,7 +40,7 @@ func request_PermissionService_CreatePermission_0(ctx context.Context, marshaler
 		protoReq CreatePermissionRequest
 		metadata runtime.ServerMetadata
 	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq.Permission); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	msg, err := client.CreatePermission(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -52,7 +52,7 @@ func local_request_PermissionService_CreatePermission_0(ctx context.Context, mar
 		protoReq CreatePermissionRequest
 		metadata runtime.ServerMetadata
 	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq.Permission); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	msg, err := server.CreatePermission(ctx, &protoReq)
@@ -153,7 +153,7 @@ func request_PermissionService_UpdatePermission_0(ctx context.Context, marshaler
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq.Permission); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	val, ok := pathParams["permission.file_id"]
@@ -182,7 +182,7 @@ func local_request_PermissionService_UpdatePermission_0(ctx context.Context, mar
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq.Permission); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	val, ok := pathParams["permission.file_id"]
