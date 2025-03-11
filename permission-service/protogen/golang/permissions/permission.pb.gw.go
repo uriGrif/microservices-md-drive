@@ -111,9 +111,9 @@ func local_request_PermissionService_GetPermission_0(ctx context.Context, marsha
 	return msg, metadata, err
 }
 
-func request_PermissionService_ListPermissions_0(ctx context.Context, marshaler runtime.Marshaler, client PermissionServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_PermissionService_ListPermissionsByFile_0(ctx context.Context, marshaler runtime.Marshaler, client PermissionServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListPermissionsRequest
+		protoReq ListPermissionsByFileRequest
 		metadata runtime.ServerMetadata
 		err      error
 	)
@@ -125,13 +125,13 @@ func request_PermissionService_ListPermissions_0(ctx context.Context, marshaler 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "file_id", err)
 	}
-	msg, err := client.ListPermissions(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.ListPermissionsByFile(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_PermissionService_ListPermissions_0(ctx context.Context, marshaler runtime.Marshaler, server PermissionServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_PermissionService_ListPermissionsByFile_0(ctx context.Context, marshaler runtime.Marshaler, server PermissionServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq ListPermissionsRequest
+		protoReq ListPermissionsByFileRequest
 		metadata runtime.ServerMetadata
 		err      error
 	)
@@ -143,7 +143,43 @@ func local_request_PermissionService_ListPermissions_0(ctx context.Context, mars
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "file_id", err)
 	}
-	msg, err := server.ListPermissions(ctx, &protoReq)
+	msg, err := server.ListPermissionsByFile(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+func request_PermissionService_ListPermissionsByUser_0(ctx context.Context, marshaler runtime.Marshaler, client PermissionServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq ListPermissionsByUserRequest
+		metadata runtime.ServerMetadata
+		err      error
+	)
+	val, ok := pathParams["user_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "user_id")
+	}
+	protoReq.UserId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "user_id", err)
+	}
+	msg, err := client.ListPermissionsByUser(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_PermissionService_ListPermissionsByUser_0(ctx context.Context, marshaler runtime.Marshaler, server PermissionServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq ListPermissionsByUserRequest
+		metadata runtime.ServerMetadata
+		err      error
+	)
+	val, ok := pathParams["user_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "user_id")
+	}
+	protoReq.UserId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "user_id", err)
+	}
+	msg, err := server.ListPermissionsByUser(ctx, &protoReq)
 	return msg, metadata, err
 }
 
@@ -303,25 +339,45 @@ func RegisterPermissionServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		}
 		forward_PermissionService_GetPermission_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodGet, pattern_PermissionService_ListPermissions_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_PermissionService_ListPermissionsByFile_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.PermissionService/ListPermissions", runtime.WithHTTPPathPattern("/permissions/{file_id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.PermissionService/ListPermissionsByFile", runtime.WithHTTPPathPattern("/permissions/{file_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_PermissionService_ListPermissions_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_PermissionService_ListPermissionsByFile_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_PermissionService_ListPermissions_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PermissionService_ListPermissionsByFile_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodGet, pattern_PermissionService_ListPermissionsByUser_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.PermissionService/ListPermissionsByUser", runtime.WithHTTPPathPattern("/permissions/{user_id}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_PermissionService_ListPermissionsByUser_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_PermissionService_ListPermissionsByUser_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodPut, pattern_PermissionService_UpdatePermission_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -437,22 +493,39 @@ func RegisterPermissionServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		}
 		forward_PermissionService_GetPermission_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodGet, pattern_PermissionService_ListPermissions_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_PermissionService_ListPermissionsByFile_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.PermissionService/ListPermissions", runtime.WithHTTPPathPattern("/permissions/{file_id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.PermissionService/ListPermissionsByFile", runtime.WithHTTPPathPattern("/permissions/{file_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_PermissionService_ListPermissions_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_PermissionService_ListPermissionsByFile_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_PermissionService_ListPermissions_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PermissionService_ListPermissionsByFile_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodGet, pattern_PermissionService_ListPermissionsByUser_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.PermissionService/ListPermissionsByUser", runtime.WithHTTPPathPattern("/permissions/{user_id}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_PermissionService_ListPermissionsByUser_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_PermissionService_ListPermissionsByUser_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodPut, pattern_PermissionService_UpdatePermission_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -492,17 +565,19 @@ func RegisterPermissionServiceHandlerClient(ctx context.Context, mux *runtime.Se
 }
 
 var (
-	pattern_PermissionService_CreatePermission_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"permissions"}, ""))
-	pattern_PermissionService_GetPermission_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 1, 0, 4, 1, 5, 2}, []string{"permissions", "file_id", "user_id"}, ""))
-	pattern_PermissionService_ListPermissions_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"permissions", "file_id"}, ""))
-	pattern_PermissionService_UpdatePermission_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 1, 0, 4, 1, 5, 2}, []string{"permissions", "permission.file_id", "permission.user_id"}, ""))
-	pattern_PermissionService_DeletePermission_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 1, 0, 4, 1, 5, 2}, []string{"permissions", "file_id", "user_id"}, ""))
+	pattern_PermissionService_CreatePermission_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"permissions"}, ""))
+	pattern_PermissionService_GetPermission_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 1, 0, 4, 1, 5, 2}, []string{"permissions", "file_id", "user_id"}, ""))
+	pattern_PermissionService_ListPermissionsByFile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"permissions", "file_id"}, ""))
+	pattern_PermissionService_ListPermissionsByUser_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"permissions", "user_id"}, ""))
+	pattern_PermissionService_UpdatePermission_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 1, 0, 4, 1, 5, 2}, []string{"permissions", "permission.file_id", "permission.user_id"}, ""))
+	pattern_PermissionService_DeletePermission_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1, 1, 0, 4, 1, 5, 2}, []string{"permissions", "file_id", "user_id"}, ""))
 )
 
 var (
-	forward_PermissionService_CreatePermission_0 = runtime.ForwardResponseMessage
-	forward_PermissionService_GetPermission_0    = runtime.ForwardResponseMessage
-	forward_PermissionService_ListPermissions_0  = runtime.ForwardResponseMessage
-	forward_PermissionService_UpdatePermission_0 = runtime.ForwardResponseMessage
-	forward_PermissionService_DeletePermission_0 = runtime.ForwardResponseMessage
+	forward_PermissionService_CreatePermission_0      = runtime.ForwardResponseMessage
+	forward_PermissionService_GetPermission_0         = runtime.ForwardResponseMessage
+	forward_PermissionService_ListPermissionsByFile_0 = runtime.ForwardResponseMessage
+	forward_PermissionService_ListPermissionsByUser_0 = runtime.ForwardResponseMessage
+	forward_PermissionService_UpdatePermission_0      = runtime.ForwardResponseMessage
+	forward_PermissionService_DeletePermission_0      = runtime.ForwardResponseMessage
 )

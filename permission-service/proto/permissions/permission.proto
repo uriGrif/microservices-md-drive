@@ -38,10 +38,18 @@ message GetPermissionResponse {
 }
 
 // Read (List permissions for a file)
-message ListPermissionsRequest {
+message ListPermissionsByFileRequest {
     string file_id = 1;
 }
-message ListPermissionsResponse {
+message ListPermissionsByFileResponse {
+    repeated Permission permissions = 1;
+}
+
+// Read (List permissions for a user)
+message ListPermissionsByUserRequest {
+    string user_id = 1;
+}
+message ListPermissionsByUserResponse {
     repeated Permission permissions = 1;
 }
 
@@ -75,9 +83,14 @@ service PermissionService {
             get: "/permissions/{file_id}/{user_id}"
         };
     }
-    rpc ListPermissions(ListPermissionsRequest) returns (ListPermissionsResponse) {
+    rpc ListPermissionsByFile(ListPermissionsByFileRequest) returns (ListPermissionsByFileResponse) {
         option (google.api.http) = {
             get: "/permissions/{file_id}"
+        };
+    }
+    rpc ListPermissionsByUser(ListPermissionsByUserRequest) returns (ListPermissionsByUserResponse) {
+        option (google.api.http) = {
+            get: "/permissions/{user_id}"
         };
     }
     rpc UpdatePermission(UpdatePermissionRequest) returns (UpdatePermissionResponse) {
