@@ -86,6 +86,8 @@ services:
             target: permissions-db
         expose:
             - "5432"
+        ports:
+            - "5432:5432"
         env_file: "./permission-service/.env"
         volumes:
             - ./volumes/permissions-db-data:/var/lib/postgresql/data

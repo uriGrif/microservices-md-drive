@@ -7,12 +7,23 @@ import (
 	"net/http"
 	"os"
 	"permission-service/protogen/golang/permissions"
+	"strings"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
+
+// without this, only the headers starting with "Grpc-Metadata-" will be forwarded to the gRPC server
+func CustomHeaderMatcher(key string) (string, bool) {
+	switch strings.ToLower(key) {
+	case "x-authenticated-user":
+		return key, true
+	default:
+		return runtime.DefaultHeaderMatcher(key)
+	}
+}
 
 func main() {
 	// load environment variables
@@ -31,7 +42,9 @@ func main() {
 
 	// Register gRPC server endpoint
 	// Note: Make sure the gRPC server is running properly and accessible
-	mux := runtime.NewServeMux()
+	mux := runtime.NewServeMux(
+		runtime.WithIncomingHeaderMatcher(CustomHeaderMatcher),
+	)
 	if err = permissions.RegisterPermissionServiceHandler(context.Background(), mux, conn); err != nil {
 		log.Fatalf("failed to register the permissions server: %v", err)
 	}
