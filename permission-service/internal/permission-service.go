@@ -52,6 +52,10 @@ func (ps *PermissionService) CreatePermission(ctx context.Context, req *permissi
 	if userID != req.Permission.UserId {
 		// owner wants to grant permissions to a different user
 
+		if req.Permission.Level == permissions.PermissionLevel_OWNER {
+			return nil, status.Errorf(codes.PermissionDenied, "user can only create OWNER permission for themselves")
+		}
+
 		// check that the user is the owner of the file
 		q := "SELECT 1 FROM permission WHERE file_id = $1 AND user_id = $2 AND permission_level = $3"
 		var exists int
@@ -97,9 +101,9 @@ func (ps *PermissionService) CreatePermission(ctx context.Context, req *permissi
 func (ps *PermissionService) GetPermission(ctx context.Context, req *permissions.GetPermissionRequest) (*permissions.GetPermissionResponse, error) {
 	q := "SELECT file_id, user_id, permission_level FROM permission WHERE file_id = $1 AND user_id = $2"
 	var permission permissions.Permission
-	err := ps.db.QueryRow(q, req.FileId, req.UserId).Scan(permission.FileId, permission.UserId, permission.Level)
+	err := ps.db.QueryRow(q, req.FileId, req.UserId).Scan(&permission.FileId, &permission.UserId, &permission.Level)
 	switch {
-	case err != sql.ErrNoRows:
+	case err == sql.ErrNoRows:
 		return nil, status.Errorf(codes.NotFound, "permission not found")
 	case err != nil:
 		log.Printf("query error: %v\n", err)
@@ -120,7 +124,7 @@ func (ps *PermissionService) ListPermissionsByFile(ctx context.Context, req *per
 	}
 	for rows.Next() {
 		var p permissions.Permission
-		err := rows.Scan(p.FileId, p.UserId, p.Level)
+		err := rows.Scan(&p.FileId, &p.UserId, &p.Level)
 		if err != nil {
 			log.Printf("query error: %v\n", err)
 			return nil, status.Error(codes.Internal, "Internal Server Error")
@@ -150,7 +154,7 @@ func (ps *PermissionService) ListPermissionsByUser(ctx context.Context, req *per
 	}
 	for rows.Next() {
 		var p permissions.Permission
-		err := rows.Scan(p.FileId, p.UserId, p.Level)
+		err := rows.Scan(&p.FileId, &p.UserId, &p.Level)
 		if err != nil {
 			log.Printf("query error: %v\n", err)
 			return nil, status.Error(codes.Internal, "Internal Server Error")
@@ -178,6 +182,14 @@ func (ps *PermissionService) UpdatePermission(ctx context.Context, req *permissi
 	case err != nil:
 		log.Printf("query error: %v\n", err)
 		return nil, status.Error(codes.Internal, "Internal Server Error")
+	}
+
+	if userID == req.Permission.UserId {
+		return nil, status.Errorf(codes.PermissionDenied, "OWNER of the file cannot change their own permissions")
+	}
+
+	if req.Permission.Level == permissions.PermissionLevel_OWNER {
+		return nil, status.Errorf(codes.PermissionDenied, "user can OWNER permission for themselves")
 	}
 
 	q = "UPDATE permission SET permission_level = $1 WHERE file_id = $2 AND user_id = $3"
@@ -208,10 +220,18 @@ func (ps *PermissionService) DeletePermission(ctx context.Context, req *permissi
 		return nil, status.Error(codes.Internal, "Internal Server Error")
 	}
 
-	q = "DELETE FROM permission WHERE WHERE file_id = $1 AND user_id = $2"
+	if userID == req.UserId {
+		return nil, status.Errorf(codes.PermissionDenied, "OWNER of the file cannot delete their own permissions")
+	}
+
+	q = "DELETE FROM permission WHERE file_id = $1 AND user_id = $2"
 	_, err = ps.db.Exec(q, req.FileId, req.UserId)
 	if err != nil {
 		return nil, err
 	}
-	return &permissions.DeletePermissionResponse{}, nil
+	return &permissions.DeletePermissionResponse{
+		Success: true,
+	}, nil
 }
+
+// TODO: hacer un deleteFile que borre o inhabilite todos los permisos asociados

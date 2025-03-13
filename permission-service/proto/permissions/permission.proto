@@ -85,12 +85,12 @@ service PermissionService {
     }
     rpc ListPermissionsByFile(ListPermissionsByFileRequest) returns (ListPermissionsByFileResponse) {
         option (google.api.http) = {
-            get: "/permissions/{file_id}"
+            get: "/permissions/file/{file_id}"
         };
     }
     rpc ListPermissionsByUser(ListPermissionsByUserRequest) returns (ListPermissionsByUserResponse) {
         option (google.api.http) = {
-            get: "/permissions/{user_id}"
+            get: "/permissions/user/{user_id}"
         };
     }
     rpc UpdatePermission(UpdatePermissionRequest) returns (UpdatePermissionResponse) {
