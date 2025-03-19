@@ -80,7 +80,9 @@ func (ps *PermissionService) CreatePermission(ctx context.Context, req *permissi
 		var exists int
 		err := ps.db.QueryRow(q, req.Permission.FileId, userID, permissions.PermissionLevel_OWNER).Scan(&exists)
 		switch {
-		case err != sql.ErrNoRows:
+		case err == sql.ErrNoRows:
+			break
+		case exists == 1:
 			return nil, status.Errorf(codes.PermissionDenied, "file already has an owner")
 		case err != nil:
 			log.Printf("query error: %v\n", err)
@@ -91,6 +93,7 @@ func (ps *PermissionService) CreatePermission(ctx context.Context, req *permissi
 	q := "INSERT INTO permission(file_id, user_id, permission_level) values ($1, $2, $3)"
 	_, err := ps.db.Exec(q, req.Permission.FileId, req.Permission.UserId, req.Permission.Level)
 	if err != nil {
+		log.Printf("insert error: %v\n", err)
 		return nil, err
 	}
 	return &permissions.CreatePermissionResponse{

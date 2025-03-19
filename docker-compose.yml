@@ -44,7 +44,7 @@ services:
             restart_policy: # might fail if the profile-db isn't fully up
                 condition: on-failure
                 delay: 5s
-                max_attempts: 3
+                max_attempts: 5
 
     permissions-service-gateway:
         image: permissions-service-gateway
@@ -86,8 +86,6 @@ services:
             target: permissions-db
         expose:
             - "5432"
-        ports:
-            - "5432:5432"
         env_file: "./permission-service/.env"
         volumes:
             - ./volumes/permissions-db-data:/var/lib/postgresql/data

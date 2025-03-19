@@ -1,6 +1,6 @@
 [
 	{
-		"name": "service1",
+		"name": "profiles-service",
 		"targets": [
 			{
 				"url": "http://profile-service:9000/",
@@ -22,6 +22,36 @@
 			},
 			{
 				"endpoint": "GET /profiles/search-profile"
+			}
+		]
+	},
+	{
+		"name": "permissions-service",
+		"targets": [
+			{
+				"url": "http://permissions-service-gateway:9001/",
+				"weight": 100
+			}
+		],
+		"loadBalancer": "default",
+		"routes": [
+			{
+				"endpoint": "/permissions",
+				"authenticator": "auth0"
+			},
+			{
+				"endpoint": "/permissions/",
+				"authenticator": "auth0"
+			},
+			{
+				"endpoint": "GET /permissions/{file_id}/{user_id}"
+			},
+			{
+				"endpoint": "GET /permissions/file/{file_id}"
+			},
+			{
+				"endpoint": "GET /permissions/user/{file_id}",
+				"authenticator": "auth0"
 			}
 		]
 	}
