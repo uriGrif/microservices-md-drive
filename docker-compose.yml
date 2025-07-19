@@ -90,6 +90,20 @@ services:
         volumes:
             - ./volumes/permissions-db-data:/var/lib/postgresql/data
 
+    files-db:
+        image: mysql
+        expose:
+            - "3306"
+        secrets:
+            - profile_mysql_password
+        environment:
+            - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/files_mysql_password
+            - MYSQL_DATABASE=filesdb
+        volumes:
+            - ./volumes/files-db-data:/var/lib/mysql
+
 secrets:
     profile_mysql_password:
         file: ./secrets/profile_mysql_password
+    files_mysql_password:
+        file: ./secrets/files_mysql_password

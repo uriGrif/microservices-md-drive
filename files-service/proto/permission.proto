@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+option go_package = "/protogen/golang/files";
+
+
+// Message representing a File entry
+message File {
+    string file_id = 1;
+    string user_id = 2;
+    string name = 3;
+}
+
+// Request & Response messages for CRUD operations
+
+// Create
+message CreateFileRequest {
+    File file = 1;
+}
+message CreateFileResponse {
+    File file = 1;
+}
+
+// Read (Get single File)
+message GetFileRequest {
+    string file_id = 1;
+    string user_id = 2;
+}
+message GetFileResponse {
+    File file = 1;
+}
+
+// Read (List Files for a user)
+message ListFilesByUserRequest {
+    string user_id = 1;
+}
+message ListFilesByUserResponse {
+    repeated File Files = 1;
+}
+
+// Update
+message UpdateFileRequest {
+    File file = 1;
+}
+message UpdateFileResponse {
+    File file = 1;
+}
+
+// Delete
+message DeleteFileRequest {
+    string file_id = 1;
+    string user_id = 2;
+}
+message DeleteFileResponse {
+    bool success = 1;
+}
+
+// gRPC Service Definition
+service FileService {
+    rpc CreateFile(CreateFileRequest) returns (CreateFileResponse);
+    rpc GetFile(GetFileRequest) returns (GetFileResponse);
+    rpc ListFilesByUser(ListFilesByUserRequest) returns (ListFilesByUserResponse);
+    rpc UpdateFile(UpdateFileRequest) returns (UpdateFileResponse);
+    rpc DeleteFile(DeleteFileRequest) returns (DeleteFileResponse);
+}
