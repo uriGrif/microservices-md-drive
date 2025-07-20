@@ -4,7 +4,7 @@ COPY . .
 RUN go mod download
 RUN go build -o ./main
 
-FROM alpine:latest AS permissions-service-grpc
+FROM alpine:latest AS files-service
 WORKDIR /app
 COPY --from=builder /app/main .
 ENTRYPOINT ["./main"]

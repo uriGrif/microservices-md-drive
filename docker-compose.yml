@@ -28,7 +28,7 @@ services:
             restart_policy: # might fail if the profile-db isn't fully up
                 condition: on-failure
                 delay: 5s
-                max_attempts: 3
+                max_attempts: 5
 
     permissions-service-grpc:
         image: permissions-service-grpc
@@ -41,7 +41,7 @@ services:
             - permissions-db
         env_file: "./permission-service/.env"
         deploy:
-            restart_policy: # might fail if the profile-db isn't fully up
+            restart_policy: # might fail if the permissions-db isn't fully up
                 condition: on-failure
                 delay: 5s
                 max_attempts: 5
@@ -57,6 +57,17 @@ services:
             - permissions-db
             - permissions-service-grpc
         env_file: "./permission-service/.env"
+
+    files-service:
+        image: files-service
+        build:
+            context: ./files-service
+            target: files-service
+        expose:
+            - "9000"
+        depends_on:
+            - files-db
+        env_file: "./files-service/.env"
 
     web-client:
         build:
@@ -91,11 +102,14 @@ services:
             - ./volumes/permissions-db-data:/var/lib/postgresql/data
 
     files-db:
-        image: mysql
+        image: files-db
+        build:
+            context: ./files-service
+            target: files-db
         expose:
             - "3306"
         secrets:
-            - profile_mysql_password
+            - files_mysql_password
         environment:
             - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/files_mysql_password
             - MYSQL_DATABASE=filesdb
