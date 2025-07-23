@@ -4,7 +4,7 @@
 // - protoc             v5.29.3
 // source: permission.proto
 
-package files
+package permissions
 
 import (
 	context "context"
@@ -19,257 +19,295 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	FileService_CreateFile_FullMethodName      = "/FileService/CreateFile"
-	FileService_GetFile_FullMethodName         = "/FileService/GetFile"
-	FileService_ListFilesByUser_FullMethodName = "/FileService/ListFilesByUser"
-	FileService_UpdateFile_FullMethodName      = "/FileService/UpdateFile"
-	FileService_DeleteFile_FullMethodName      = "/FileService/DeleteFile"
+	PermissionService_CreatePermission_FullMethodName      = "/PermissionService/CreatePermission"
+	PermissionService_GetPermission_FullMethodName         = "/PermissionService/GetPermission"
+	PermissionService_ListPermissionsByFile_FullMethodName = "/PermissionService/ListPermissionsByFile"
+	PermissionService_ListPermissionsByUser_FullMethodName = "/PermissionService/ListPermissionsByUser"
+	PermissionService_UpdatePermission_FullMethodName      = "/PermissionService/UpdatePermission"
+	PermissionService_DeletePermission_FullMethodName      = "/PermissionService/DeletePermission"
 )
 
-// FileServiceClient is the client API for FileService service.
+// PermissionServiceClient is the client API for PermissionService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 // gRPC Service Definition
-type FileServiceClient interface {
-	CreateFile(ctx context.Context, in *CreateFileRequest, opts ...grpc.CallOption) (*CreateFileResponse, error)
-	GetFile(ctx context.Context, in *GetFileRequest, opts ...grpc.CallOption) (*GetFileResponse, error)
-	ListFilesByUser(ctx context.Context, in *ListFilesByUserRequest, opts ...grpc.CallOption) (*ListFilesByUserResponse, error)
-	UpdateFile(ctx context.Context, in *UpdateFileRequest, opts ...grpc.CallOption) (*UpdateFileResponse, error)
-	DeleteFile(ctx context.Context, in *DeleteFileRequest, opts ...grpc.CallOption) (*DeleteFileResponse, error)
+type PermissionServiceClient interface {
+	CreatePermission(ctx context.Context, in *CreatePermissionRequest, opts ...grpc.CallOption) (*CreatePermissionResponse, error)
+	GetPermission(ctx context.Context, in *GetPermissionRequest, opts ...grpc.CallOption) (*GetPermissionResponse, error)
+	ListPermissionsByFile(ctx context.Context, in *ListPermissionsByFileRequest, opts ...grpc.CallOption) (*ListPermissionsByFileResponse, error)
+	ListPermissionsByUser(ctx context.Context, in *ListPermissionsByUserRequest, opts ...grpc.CallOption) (*ListPermissionsByUserResponse, error)
+	UpdatePermission(ctx context.Context, in *UpdatePermissionRequest, opts ...grpc.CallOption) (*UpdatePermissionResponse, error)
+	DeletePermission(ctx context.Context, in *DeletePermissionRequest, opts ...grpc.CallOption) (*DeletePermissionResponse, error)
 }
 
-type fileServiceClient struct {
+type permissionServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewFileServiceClient(cc grpc.ClientConnInterface) FileServiceClient {
-	return &fileServiceClient{cc}
+func NewPermissionServiceClient(cc grpc.ClientConnInterface) PermissionServiceClient {
+	return &permissionServiceClient{cc}
 }
 
-func (c *fileServiceClient) CreateFile(ctx context.Context, in *CreateFileRequest, opts ...grpc.CallOption) (*CreateFileResponse, error) {
+func (c *permissionServiceClient) CreatePermission(ctx context.Context, in *CreatePermissionRequest, opts ...grpc.CallOption) (*CreatePermissionResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateFileResponse)
-	err := c.cc.Invoke(ctx, FileService_CreateFile_FullMethodName, in, out, cOpts...)
+	out := new(CreatePermissionResponse)
+	err := c.cc.Invoke(ctx, PermissionService_CreatePermission_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *fileServiceClient) GetFile(ctx context.Context, in *GetFileRequest, opts ...grpc.CallOption) (*GetFileResponse, error) {
+func (c *permissionServiceClient) GetPermission(ctx context.Context, in *GetPermissionRequest, opts ...grpc.CallOption) (*GetPermissionResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetFileResponse)
-	err := c.cc.Invoke(ctx, FileService_GetFile_FullMethodName, in, out, cOpts...)
+	out := new(GetPermissionResponse)
+	err := c.cc.Invoke(ctx, PermissionService_GetPermission_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *fileServiceClient) ListFilesByUser(ctx context.Context, in *ListFilesByUserRequest, opts ...grpc.CallOption) (*ListFilesByUserResponse, error) {
+func (c *permissionServiceClient) ListPermissionsByFile(ctx context.Context, in *ListPermissionsByFileRequest, opts ...grpc.CallOption) (*ListPermissionsByFileResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListFilesByUserResponse)
-	err := c.cc.Invoke(ctx, FileService_ListFilesByUser_FullMethodName, in, out, cOpts...)
+	out := new(ListPermissionsByFileResponse)
+	err := c.cc.Invoke(ctx, PermissionService_ListPermissionsByFile_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *fileServiceClient) UpdateFile(ctx context.Context, in *UpdateFileRequest, opts ...grpc.CallOption) (*UpdateFileResponse, error) {
+func (c *permissionServiceClient) ListPermissionsByUser(ctx context.Context, in *ListPermissionsByUserRequest, opts ...grpc.CallOption) (*ListPermissionsByUserResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateFileResponse)
-	err := c.cc.Invoke(ctx, FileService_UpdateFile_FullMethodName, in, out, cOpts...)
+	out := new(ListPermissionsByUserResponse)
+	err := c.cc.Invoke(ctx, PermissionService_ListPermissionsByUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *fileServiceClient) DeleteFile(ctx context.Context, in *DeleteFileRequest, opts ...grpc.CallOption) (*DeleteFileResponse, error) {
+func (c *permissionServiceClient) UpdatePermission(ctx context.Context, in *UpdatePermissionRequest, opts ...grpc.CallOption) (*UpdatePermissionResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeleteFileResponse)
-	err := c.cc.Invoke(ctx, FileService_DeleteFile_FullMethodName, in, out, cOpts...)
+	out := new(UpdatePermissionResponse)
+	err := c.cc.Invoke(ctx, PermissionService_UpdatePermission_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// FileServiceServer is the server API for FileService service.
-// All implementations must embed UnimplementedFileServiceServer
+func (c *permissionServiceClient) DeletePermission(ctx context.Context, in *DeletePermissionRequest, opts ...grpc.CallOption) (*DeletePermissionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeletePermissionResponse)
+	err := c.cc.Invoke(ctx, PermissionService_DeletePermission_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// PermissionServiceServer is the server API for PermissionService service.
+// All implementations must embed UnimplementedPermissionServiceServer
 // for forward compatibility.
 //
 // gRPC Service Definition
-type FileServiceServer interface {
-	CreateFile(context.Context, *CreateFileRequest) (*CreateFileResponse, error)
-	GetFile(context.Context, *GetFileRequest) (*GetFileResponse, error)
-	ListFilesByUser(context.Context, *ListFilesByUserRequest) (*ListFilesByUserResponse, error)
-	UpdateFile(context.Context, *UpdateFileRequest) (*UpdateFileResponse, error)
-	DeleteFile(context.Context, *DeleteFileRequest) (*DeleteFileResponse, error)
-	mustEmbedUnimplementedFileServiceServer()
+type PermissionServiceServer interface {
+	CreatePermission(context.Context, *CreatePermissionRequest) (*CreatePermissionResponse, error)
+	GetPermission(context.Context, *GetPermissionRequest) (*GetPermissionResponse, error)
+	ListPermissionsByFile(context.Context, *ListPermissionsByFileRequest) (*ListPermissionsByFileResponse, error)
+	ListPermissionsByUser(context.Context, *ListPermissionsByUserRequest) (*ListPermissionsByUserResponse, error)
+	UpdatePermission(context.Context, *UpdatePermissionRequest) (*UpdatePermissionResponse, error)
+	DeletePermission(context.Context, *DeletePermissionRequest) (*DeletePermissionResponse, error)
+	mustEmbedUnimplementedPermissionServiceServer()
 }
 
-// UnimplementedFileServiceServer must be embedded to have
+// UnimplementedPermissionServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedFileServiceServer struct{}
+type UnimplementedPermissionServiceServer struct{}
 
-func (UnimplementedFileServiceServer) CreateFile(context.Context, *CreateFileRequest) (*CreateFileResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateFile not implemented")
+func (UnimplementedPermissionServiceServer) CreatePermission(context.Context, *CreatePermissionRequest) (*CreatePermissionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreatePermission not implemented")
 }
-func (UnimplementedFileServiceServer) GetFile(context.Context, *GetFileRequest) (*GetFileResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetFile not implemented")
+func (UnimplementedPermissionServiceServer) GetPermission(context.Context, *GetPermissionRequest) (*GetPermissionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPermission not implemented")
 }
-func (UnimplementedFileServiceServer) ListFilesByUser(context.Context, *ListFilesByUserRequest) (*ListFilesByUserResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListFilesByUser not implemented")
+func (UnimplementedPermissionServiceServer) ListPermissionsByFile(context.Context, *ListPermissionsByFileRequest) (*ListPermissionsByFileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListPermissionsByFile not implemented")
 }
-func (UnimplementedFileServiceServer) UpdateFile(context.Context, *UpdateFileRequest) (*UpdateFileResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateFile not implemented")
+func (UnimplementedPermissionServiceServer) ListPermissionsByUser(context.Context, *ListPermissionsByUserRequest) (*ListPermissionsByUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListPermissionsByUser not implemented")
 }
-func (UnimplementedFileServiceServer) DeleteFile(context.Context, *DeleteFileRequest) (*DeleteFileResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteFile not implemented")
+func (UnimplementedPermissionServiceServer) UpdatePermission(context.Context, *UpdatePermissionRequest) (*UpdatePermissionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePermission not implemented")
 }
-func (UnimplementedFileServiceServer) mustEmbedUnimplementedFileServiceServer() {}
-func (UnimplementedFileServiceServer) testEmbeddedByValue()                     {}
+func (UnimplementedPermissionServiceServer) DeletePermission(context.Context, *DeletePermissionRequest) (*DeletePermissionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeletePermission not implemented")
+}
+func (UnimplementedPermissionServiceServer) mustEmbedUnimplementedPermissionServiceServer() {}
+func (UnimplementedPermissionServiceServer) testEmbeddedByValue()                           {}
 
-// UnsafeFileServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to FileServiceServer will
+// UnsafePermissionServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to PermissionServiceServer will
 // result in compilation errors.
-type UnsafeFileServiceServer interface {
-	mustEmbedUnimplementedFileServiceServer()
+type UnsafePermissionServiceServer interface {
+	mustEmbedUnimplementedPermissionServiceServer()
 }
 
-func RegisterFileServiceServer(s grpc.ServiceRegistrar, srv FileServiceServer) {
-	// If the following call pancis, it indicates UnimplementedFileServiceServer was
+func RegisterPermissionServiceServer(s grpc.ServiceRegistrar, srv PermissionServiceServer) {
+	// If the following call pancis, it indicates UnimplementedPermissionServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&FileService_ServiceDesc, srv)
+	s.RegisterService(&PermissionService_ServiceDesc, srv)
 }
 
-func _FileService_CreateFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateFileRequest)
+func _PermissionService_CreatePermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreatePermissionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FileServiceServer).CreateFile(ctx, in)
+		return srv.(PermissionServiceServer).CreatePermission(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: FileService_CreateFile_FullMethodName,
+		FullMethod: PermissionService_CreatePermission_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FileServiceServer).CreateFile(ctx, req.(*CreateFileRequest))
+		return srv.(PermissionServiceServer).CreatePermission(ctx, req.(*CreatePermissionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FileService_GetFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFileRequest)
+func _PermissionService_GetPermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPermissionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FileServiceServer).GetFile(ctx, in)
+		return srv.(PermissionServiceServer).GetPermission(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: FileService_GetFile_FullMethodName,
+		FullMethod: PermissionService_GetPermission_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FileServiceServer).GetFile(ctx, req.(*GetFileRequest))
+		return srv.(PermissionServiceServer).GetPermission(ctx, req.(*GetPermissionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FileService_ListFilesByUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListFilesByUserRequest)
+func _PermissionService_ListPermissionsByFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPermissionsByFileRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FileServiceServer).ListFilesByUser(ctx, in)
+		return srv.(PermissionServiceServer).ListPermissionsByFile(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: FileService_ListFilesByUser_FullMethodName,
+		FullMethod: PermissionService_ListPermissionsByFile_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FileServiceServer).ListFilesByUser(ctx, req.(*ListFilesByUserRequest))
+		return srv.(PermissionServiceServer).ListPermissionsByFile(ctx, req.(*ListPermissionsByFileRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FileService_UpdateFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateFileRequest)
+func _PermissionService_ListPermissionsByUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPermissionsByUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FileServiceServer).UpdateFile(ctx, in)
+		return srv.(PermissionServiceServer).ListPermissionsByUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: FileService_UpdateFile_FullMethodName,
+		FullMethod: PermissionService_ListPermissionsByUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FileServiceServer).UpdateFile(ctx, req.(*UpdateFileRequest))
+		return srv.(PermissionServiceServer).ListPermissionsByUser(ctx, req.(*ListPermissionsByUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FileService_DeleteFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteFileRequest)
+func _PermissionService_UpdatePermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePermissionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FileServiceServer).DeleteFile(ctx, in)
+		return srv.(PermissionServiceServer).UpdatePermission(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: FileService_DeleteFile_FullMethodName,
+		FullMethod: PermissionService_UpdatePermission_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FileServiceServer).DeleteFile(ctx, req.(*DeleteFileRequest))
+		return srv.(PermissionServiceServer).UpdatePermission(ctx, req.(*UpdatePermissionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// FileService_ServiceDesc is the grpc.ServiceDesc for FileService service.
+func _PermissionService_DeletePermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePermissionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PermissionServiceServer).DeletePermission(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PermissionService_DeletePermission_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PermissionServiceServer).DeletePermission(ctx, req.(*DeletePermissionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// PermissionService_ServiceDesc is the grpc.ServiceDesc for PermissionService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var FileService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "FileService",
-	HandlerType: (*FileServiceServer)(nil),
+var PermissionService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "PermissionService",
+	HandlerType: (*PermissionServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateFile",
-			Handler:    _FileService_CreateFile_Handler,
+			MethodName: "CreatePermission",
+			Handler:    _PermissionService_CreatePermission_Handler,
 		},
 		{
-			MethodName: "GetFile",
-			Handler:    _FileService_GetFile_Handler,
+			MethodName: "GetPermission",
+			Handler:    _PermissionService_GetPermission_Handler,
 		},
 		{
-			MethodName: "ListFilesByUser",
-			Handler:    _FileService_ListFilesByUser_Handler,
+			MethodName: "ListPermissionsByFile",
+			Handler:    _PermissionService_ListPermissionsByFile_Handler,
 		},
 		{
-			MethodName: "UpdateFile",
-			Handler:    _FileService_UpdateFile_Handler,
+			MethodName: "ListPermissionsByUser",
+			Handler:    _PermissionService_ListPermissionsByUser_Handler,
 		},
 		{
-			MethodName: "DeleteFile",
-			Handler:    _FileService_DeleteFile_Handler,
+			MethodName: "UpdatePermission",
+			Handler:    _PermissionService_UpdatePermission_Handler,
+		},
+		{
+			MethodName: "DeletePermission",
+			Handler:    _PermissionService_DeletePermission_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

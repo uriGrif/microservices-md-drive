@@ -1,64 +1,79 @@
 syntax = "proto3";
 
-option go_package = "/protogen/golang/files";
+option go_package = "/protogen/golang/permissions";
 
+// Enum for permission levels
+enum PermissionLevel {
+    OWNER = 0;
+    EDITOR = 1;
+    VIEWER = 2;
+}
 
-// Message representing a File entry
-message File {
-    string file_id = 1;
-    string user_id = 2;
-    string name = 3;
+// Message representing a permission entry
+message Permission {
+    string file_id = 1 [json_name = "fileId"];
+    string user_id = 2 [json_name = "userId"];
+    PermissionLevel level = 3 [json_name = "level"];
 }
 
 // Request & Response messages for CRUD operations
 
 // Create
-message CreateFileRequest {
-    File file = 1;
+message CreatePermissionRequest {
+    Permission permission = 1;
 }
-message CreateFileResponse {
-    File file = 1;
+message CreatePermissionResponse {
+    Permission permission = 1;
 }
 
-// Read (Get single File)
-message GetFileRequest {
+// Read (Get single permission)
+message GetPermissionRequest {
     string file_id = 1;
     string user_id = 2;
 }
-message GetFileResponse {
-    File file = 1;
+message GetPermissionResponse {
+    Permission permission = 1;
 }
 
-// Read (List Files for a user)
-message ListFilesByUserRequest {
+// Read (List permissions for a file)
+message ListPermissionsByFileRequest {
+    string file_id = 1;
+}
+message ListPermissionsByFileResponse {
+    repeated Permission permissions = 1;
+}
+
+// Read (List permissions for a user)
+message ListPermissionsByUserRequest {
     string user_id = 1;
 }
-message ListFilesByUserResponse {
-    repeated File Files = 1;
+message ListPermissionsByUserResponse {
+    repeated Permission permissions = 1;
 }
 
 // Update
-message UpdateFileRequest {
-    File file = 1;
+message UpdatePermissionRequest {
+    Permission permission = 1;
 }
-message UpdateFileResponse {
-    File file = 1;
+message UpdatePermissionResponse {
+    Permission permission = 1;
 }
 
 // Delete
-message DeleteFileRequest {
+message DeletePermissionRequest {
     string file_id = 1;
     string user_id = 2;
 }
-message DeleteFileResponse {
+message DeletePermissionResponse {
     bool success = 1;
 }
 
 // gRPC Service Definition
-service FileService {
-    rpc CreateFile(CreateFileRequest) returns (CreateFileResponse);
-    rpc GetFile(GetFileRequest) returns (GetFileResponse);
-    rpc ListFilesByUser(ListFilesByUserRequest) returns (ListFilesByUserResponse);
-    rpc UpdateFile(UpdateFileRequest) returns (UpdateFileResponse);
-    rpc DeleteFile(DeleteFileRequest) returns (DeleteFileResponse);
+service PermissionService {
+    rpc CreatePermission(CreatePermissionRequest) returns (CreatePermissionResponse);
+    rpc GetPermission(GetPermissionRequest) returns (GetPermissionResponse);
+    rpc ListPermissionsByFile(ListPermissionsByFileRequest) returns (ListPermissionsByFileResponse);
+    rpc ListPermissionsByUser(ListPermissionsByUserRequest) returns (ListPermissionsByUserResponse);
+    rpc UpdatePermission(UpdatePermissionRequest) returns (UpdatePermissionResponse);
+    rpc DeletePermission(DeletePermissionRequest) returns (DeletePermissionResponse);
 }

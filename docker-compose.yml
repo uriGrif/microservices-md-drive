@@ -64,10 +64,15 @@ services:
             context: ./files-service
             target: files-service
         expose:
-            - "9000"
+            - "8080"
         depends_on:
             - files-db
         env_file: "./files-service/.env"
+        deploy:
+            restart_policy:
+                condition: on-failure
+                delay: 5s
+                max_attempts: 5
 
     web-client:
         build:

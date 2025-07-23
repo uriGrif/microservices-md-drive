@@ -195,7 +195,7 @@ func (ps *PermissionService) UpdatePermission(ctx context.Context, req *permissi
 		return nil, status.Errorf(codes.PermissionDenied, "user can OWNER permission for themselves")
 	}
 
-	q = "UPDATE permission SET permission_level = $1 WHERE file_id = $2 AND user_id = $3"
+	q = "UPDATE permission SET permission_level = $1, updated_at = CURRENT_TIMESTAMP WHERE file_id = $2 AND user_id = $3"
 	_, err = ps.db.Exec(q, req.Permission.Level, req.Permission.FileId, req.Permission.UserId)
 	if err != nil {
 		return nil, err
