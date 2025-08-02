@@ -6,10 +6,13 @@ import (
 	permissions "files-service/protogen/golang"
 	"fmt"
 	"log"
+	"slices"
 	"strings"
 
 	"github.com/google/uuid"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 )
 
 type FilesService struct {
@@ -132,11 +135,77 @@ func (fs *FilesService) ListFilesByUser(userId string) ([]ListFile, error) {
 
 // update file metadata, not the content, that is managed by the files service
 func (fs *FilesService) UpdateFile(fileId string, userId string, file File) (File, error) {
-	// TODO
+	md := metadata.Pairs("x-authenticated-user", userId)
+	ctxWithMetadata := metadata.NewOutgoingContext(context.Background(), md)
+	permissionsRes, err := fs.permissionsClient.GetPermission(ctxWithMetadata, &permissions.GetPermissionRequest{
+		UserId: userId,
+		FileId: fileId,
+	})
+	if err != nil {
+		st, ok := status.FromError(err)
+		if ok && st.Code() == codes.NotFound {
+			log.Printf("file %s not found for user %s: %v", fileId, userId, err)
+			return File{}, ErrFileNotFound
+		}
+		log.Printf("failed to get permissions for user %s: %v", userId, err)
+		return File{}, err
+	}
+	if !slices.Contains(FileUpdatePermissionLevels, permissionsRes.Permission.Level) {
+		log.Printf("user %s does not have permission to update file %s", userId, fileId)
+		return File{}, ErrNotAuthorized
+	}
+	query := "UPDATE files SET name = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?"
+	res, err := fs.db.Exec(query, file.Name, fileId)
+	if err != nil {
+		log.Printf("failed to update file %s: %v", fileId, err)
+		return File{}, err
+	}
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		log.Printf("failed to get affected rows")
+		return File{}, err
+	}
+	if rowsAffected == 0 {
+		log.Printf("no rows updated for file %s, user %s", fileId, userId)
+		return File{}, ErrFileNotFound
+	}
 	return file, nil
 }
 
 func (fs *FilesService) DeleteFile(fileId string, userId string) error {
-	// TODO
+	md := metadata.Pairs("x-authenticated-user", userId)
+	ctxWithMetadata := metadata.NewOutgoingContext(context.Background(), md)
+	permissionsRes, err := fs.permissionsClient.GetPermission(ctxWithMetadata, &permissions.GetPermissionRequest{
+		UserId: userId,
+		FileId: fileId,
+	})
+	if err != nil {
+		st, ok := status.FromError(err)
+		if ok && st.Code() == codes.NotFound {
+			log.Printf("file %s not found for user %s: %v", fileId, userId, err)
+			return ErrFileNotFound
+		}
+		log.Printf("failed to get permissions for user %s: %v", userId, err)
+		return err
+	}
+	if !slices.Contains(FileDeletePermissionLevels, permissionsRes.Permission.Level) {
+		log.Printf("user %s does not have permission to delete file %s", userId, fileId)
+		return ErrNotAuthorized
+	}
+	query := "DELETE FROM files WHERE id = ?"
+	res, err := fs.db.Exec(query, fileId)
+	if err != nil {
+		log.Printf("failed to update file %s: %v", fileId, err)
+		return err
+	}
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		log.Printf("failed to get affected rows")
+		return err
+	}
+	if rowsAffected == 0 {
+		log.Printf("no rows deleted for file %s, user %s", fileId, userId)
+		return ErrFileNotFound
+	}
 	return nil
 }

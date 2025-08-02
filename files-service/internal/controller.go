@@ -3,7 +3,6 @@ package internal
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -42,7 +41,6 @@ func (fc *FilesController) CreateFile(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
 		return
 	}
-	fmt.Printf("Creating file for user %s with name %s\n", userId, requestBody.Name)
 	file, err := fc.service.CreateFile(userId, requestBody.Name)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create file"})
@@ -85,11 +83,56 @@ func (fs *FilesController) ListFilesByUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, files)
 }
 
-// update file metadata, not the content, that is managed by the files service
+// update file metadata
 func (fs *FilesController) UpdateFile(ctx *gin.Context) {
-	// TODO
+	userId, authErr := authenticateUser(ctx)
+	if authErr != nil {
+		return
+	}
+	var reqBody UpdateFileRequest
+	if err := ctx.ShouldBindJSON(&reqBody); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
+		return
+	}
+	fileId := ctx.Param("id")
+	file, err := fs.service.UpdateFile(fileId, userId, File{
+		Id:     fileId,
+		UserId: userId,
+		Name:   reqBody.Name,
+	})
+	if err != nil {
+		if err == ErrNotAuthorized {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"error": ErrNotAuthorized.Error()})
+			return
+		}
+		if err == ErrFileNotFound {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": ErrFileNotFound.Error()})
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "failed to update file: " + err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, file)
 }
 
 func (fs *FilesController) DeleteFile(ctx *gin.Context) {
-	// TODO
+	userId, authErr := authenticateUser(ctx)
+	if authErr != nil {
+		return
+	}
+	fileId := ctx.Param("id")
+	err := fs.service.DeleteFile(fileId, userId)
+	if err != nil {
+		if err == ErrNotAuthorized {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"error": ErrNotAuthorized.Error()})
+			return
+		}
+		if err == ErrFileNotFound {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": ErrFileNotFound.Error()})
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete file: " + err.Error()})
+		return
+	}
+	ctx.Status(http.StatusNoContent)
 }

@@ -11,3 +11,7 @@ type ListFile struct {
 	CreatedAt       string `json:"created_at"`
 	PermissionLevel string `json:"permission_level"`
 }
+
+type UpdateFileRequest struct {
+	Name string `json:"name"`
+}
