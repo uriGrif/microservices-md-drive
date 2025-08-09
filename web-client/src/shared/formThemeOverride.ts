@@ -5,12 +5,12 @@ const themeOverrides: GlobalThemeOverrides = {
 		labelTextColor: "var(--text-color)"
 	},
 	Input: {
-		color: "var(--text-color)",
+		color: "var(--primary-light-color)",
 		colorFocusError: "var(--text-color)",
-		borderRadius: "5px",
+		borderRadius: "var(--border-radius)",
 		border: "0px",
 		textColor: "var(--primary-dark-color)",
-		placeholderColor: "var(--secondary-color)",
+		placeholderColor: "var(--primary-dark-color)",
 		colorFocus: "var(--text-color)",
 		borderHover: "1px solid var(--accent-color)",
 		borderFocus: "1px solid var(--accent-color)",
@@ -19,8 +19,9 @@ const themeOverrides: GlobalThemeOverrides = {
 	Select: {
 		peers: {
 			InternalSelection: {
-				color: "var(--text-color)",
-				borderRadius: "5px",
+				arrowColor: "var(--primary-dark-color)",
+				color: "var(--primary-light-color)",
+				borderRadius: "var(--border-radius)",
 				border: "0px",
 				textColor: "var(--primary-dark-color)",
 				placeholderColor: "var(--secondary-color)",
@@ -29,10 +30,10 @@ const themeOverrides: GlobalThemeOverrides = {
 				borderActive: "1px solid var(--accent-color)"
 			},
 			InternalSelectMenu: {
-				color: "var(--text-color)",
+				color: "var(--primary-light-color)",
 				borderRadius: "5px",
 				optionTextColor: "var(--primary-dark-color)",
-				optionTextColorActive: "var(--secondary-color)"
+				optionTextColorActive: "var(--primary-dark-color)"
 			}
 		}
 	}

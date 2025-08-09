@@ -23,12 +23,8 @@ const handleSignUp = () => {
 
 <template>
 	<div class="my-header">
-		<RouterLink to="/">
-			<n-icon
-				:component="Home12Regular"
-				size="2rem"
-				color="var(--primary-light-color)"
-			/>
+		<RouterLink to="/" class="title">
+			<h1>MD Drive</h1>
 		</RouterLink>
 		<div v-if="isLoading">Loading</div>
 		<template v-else>
@@ -57,5 +53,10 @@ const handleSignUp = () => {
 
 .my-header .btn {
 	margin: 0 5px;
+}
+
+.my-header .title {
+	text-decoration: none;
+	color: var(--text-color);
 }
 </style>

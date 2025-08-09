@@ -22,7 +22,7 @@ const handleClick = () => {
 
 <style>
 .btn {
-	border-radius: 5px;
+	border-radius: var(--border-radius);
 	border: 2px solid var(--primary-light-color);
 	padding: 0.8rem 2rem;
 	font-family: var(--font);
