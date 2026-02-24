@@ -1,10 +1,5 @@
 <script setup lang="ts">
-import {
-	NIcon,
-	NConfigProvider,
-	type GlobalThemeOverrides,
-	NDropdown
-} from "naive-ui";
+import { NIcon, NDropdown } from "naive-ui";
 import { Document, Calendar, Time, OverflowMenuVertical } from "@vicons/carbon";
 
 defineProps<{
@@ -12,35 +7,30 @@ defineProps<{
 	name: string;
 	createdAt: string;
 	updatedAt: string;
-	owner: string;
 }>();
+
+const emit = defineEmits(["editFile", "deleteFile"]);
 
 function formatDate(dateString: string) {
 	const date = new Date(dateString);
 	return date.toLocaleDateString("en-US", {
 		month: "short",
 		day: "numeric",
-		year: "numeric"
+		year: "numeric",
+		hour: "2-digit",
+		minute: "2-digit"
 	});
 }
-
-const dropdownTheme: GlobalThemeOverrides = {
-	Dropdown: {
-		color: "var(--primary-light-color)", // Background color
-		textColor: "var(--primary-dark-color)", // Text color
-		optionColorHover: "var(--text-color)", // Hover background color
-		optionTextColorHover: "var(--primary-dark-color)", // Hover background color
-		optionTextColor: "var(--primary-dark-color)" // Option text color
-	}
-};
 
 const handleSelect = (key: string | number) => {
 	switch (key) {
 		case "edit":
+			emit("editFile");
 			break;
 		case "share":
 			break;
 		case "delete":
+			emit("deleteFile");
 			break;
 	}
 };
@@ -89,18 +79,16 @@ const dropdownOptions = [
 				</div>
 			</div>
 		</div>
-		<n-config-provider :theme-overrides="dropdownTheme">
-			<n-dropdown
-				trigger="click"
-				:options="dropdownOptions"
-				@select="handleSelect"
-				placement="right-start"
-			>
-				<n-icon class="menu-icon">
-					<OverflowMenuVertical />
-				</n-icon>
-			</n-dropdown>
-		</n-config-provider>
+		<n-dropdown
+			trigger="click"
+			:options="dropdownOptions"
+			@select="handleSelect"
+			placement="right-start"
+		>
+			<n-icon class="menu-icon">
+				<OverflowMenuVertical />
+			</n-icon>
+		</n-dropdown>
 	</div>
 </template>
 

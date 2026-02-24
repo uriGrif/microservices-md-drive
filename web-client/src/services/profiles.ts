@@ -1,4 +1,4 @@
-import { callApi } from "./api";
+import { callApi } from "../shared/api";
 import { type Profile } from "../shared/types";
 
 export async function getProfile(userId: string): Promise<Profile> {
@@ -8,21 +8,19 @@ export async function getProfile(userId: string): Promise<Profile> {
 
 export async function createProfile(
 	p: Profile,
-	bearerToken: string
 ): Promise<Profile> {
-	return await callApi("POST", `profiles`, p, bearerToken);
+	return await callApi("POST", `profiles`, p);
 }
 
 export async function updateProfile(
 	p: Profile,
 	userId: string,
-	bearerToken: string
 ): Promise<Profile> {
-	return await callApi("PUT", `profiles/${userId}`, p, bearerToken);
+	return await callApi("PUT", `profiles/${userId}`, p);
 }
 
-export async function deleteProfile(userId: string, bearerToken: string) {
-	await callApi("DELETE", `profiles/${userId}`, null, bearerToken);
+export async function deleteProfile(userId: string) {
+	await callApi("DELETE", `profiles/${userId}`, null);
 }
 
 export async function searchProfiles(query: string): Promise<Profile[]> {

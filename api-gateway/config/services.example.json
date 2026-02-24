@@ -54,5 +54,41 @@
 				"authenticator": "auth0"
 			}
 		]
+	},
+	{
+		"name": "files-service",
+		"targets": [
+			{
+				"url": "http://files-service:8080/",
+				"weight": 100
+			}
+		],
+		"loadBalancer": "default",
+		"routes": [
+			{
+				"endpoint": "/files",
+				"authenticator": "auth0"
+			},
+			{
+				"endpoint": "/files/",
+				"authenticator": "auth0"
+			}
+		]
+	},
+	{
+		"name": "garage",
+		"targets": [
+			{
+				"url": "http://garage:3902/",
+				"weight": 100
+			}
+		],
+		"loadBalancer": "default",
+		"routes": [
+			{
+				"endpoint": "/garage",
+				"authenticator": "auth0"
+			}
+		]
 	}
 ]

@@ -20,18 +20,14 @@ onMounted(async () => {
 		console.error(error);
 	}
 });
+
+const refreshFiles = async () => {
+	files.value = await getFiles();
+};
 </script>
 
 <template>
 	<layout>
-		<div v-if="user">
-			<FileGrid :files="files" />
-			<p>
-				{{ token }}
-			</p>
-			<p>
-				{{ JSON.stringify(user, null, 1) }}
-			</p>
-		</div>
+		<FileGrid v-if="user" :files="files" @refresh-files="refreshFiles" />
 	</layout>
 </template>

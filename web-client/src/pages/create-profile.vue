@@ -5,7 +5,6 @@ import {
 	NInput,
 	NFormItem,
 	NSelect,
-	NConfigProvider,
 	useMessage,
 	type FormInst,
 	type FormRules,
@@ -14,14 +13,10 @@ import {
 import btn from "../components/buttons/btn.vue";
 import { ref, toRaw } from "vue";
 import { codes } from "iso-country-codes";
-import formThemeOverride from "../shared/formThemeOverride";
 import { createProfile } from "../services/profiles";
-import { ApiError } from "../services/api";
-import { useAuth0 } from "@auth0/auth0-vue";
+import { ApiError } from "../shared/api";
 import { profileStore } from "../stores/profile";
 import router from "../router";
-
-const { getAccessTokenSilently } = useAuth0();
 
 const message = useMessage();
 const formRef = ref<FormInst | null>(null);
@@ -68,11 +63,7 @@ const handleValidateClick = () => {
 	formRef.value?.validate(async errors => {
 		if (!errors) {
 			try {
-				const token = await getAccessTokenSilently();
-				const profile = await createProfile(
-					toRaw(formValue.value),
-					token
-				);
+				const profile = await createProfile(toRaw(formValue.value));
 				profileStore.setProfile(profile);
 				message.success("Profile successfully created!");
 				router.push("/");
@@ -89,31 +80,29 @@ const handleValidateClick = () => {
 <template>
 	<Layout>
 		<h1>Finish setting up your profile</h1>
-		<n-config-provider :theme-overrides="formThemeOverride">
-			<n-form ref="formRef" :model="formValue" :rules="rules">
-				<n-form-item label="Nickname" path="nickname">
-					<n-input
-						v-model:value="formValue.nickname"
-						placeholder="Input Nickname"
-					/>
-				</n-form-item>
-				<n-form-item label="Country" path="country">
-					<n-select
-						v-model:value="formValue.country"
-						placeholder="Select a country"
-						:options="countries"
-						filterable
-					/>
-				</n-form-item>
-				<n-form-item label="Description" path="description">
-					<n-input
-						v-model:value="formValue.description"
-						placeholder="Write a description about yourself"
-						type="textarea"
-					/>
-				</n-form-item>
-			</n-form>
-		</n-config-provider>
+		<n-form ref="formRef" :model="formValue" :rules="rules">
+			<n-form-item label="Nickname" path="nickname">
+				<n-input
+					v-model:value="formValue.nickname"
+					placeholder="Input Nickname"
+				/>
+			</n-form-item>
+			<n-form-item label="Country" path="country">
+				<n-select
+					v-model:value="formValue.country"
+					placeholder="Select a country"
+					:options="countries"
+					filterable
+				/>
+			</n-form-item>
+			<n-form-item label="Description" path="description">
+				<n-input
+					v-model:value="formValue.description"
+					placeholder="Write a description about yourself"
+					type="textarea"
+				/>
+			</n-form-item>
+		</n-form>
 		<btn :onClick="handleValidateClick" text="Submit" />
 	</Layout>
 </template>

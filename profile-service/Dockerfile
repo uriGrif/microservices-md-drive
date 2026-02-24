@@ -9,7 +9,7 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 # Use only the JAR in the final image
-FROM openjdk:17
+FROM eclipse-temurin:21-alpine
 
 WORKDIR /app
 

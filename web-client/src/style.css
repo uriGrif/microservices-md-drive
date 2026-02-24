@@ -12,8 +12,9 @@
 }
 
 body {
-	background-color: var(--background-color);
+	min-height: 100vh;
 	color: var(--text-color);
 	font-family: var(--font);
 	overflow-x: hidden;
+	background: radial-gradient(at bottom, #251f25, var(--background-color) 50%);
 }

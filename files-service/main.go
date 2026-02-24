@@ -2,6 +2,7 @@ package main
 
 import (
 	"files-service/internal"
+	objectstorage "files-service/internal/object-storage"
 	permissions "files-service/protogen/golang"
 	"log"
 	"os"
@@ -20,11 +21,12 @@ func main() {
 	}
 
 	db := internal.GetDbHandle()
+	storage := objectstorage.NewS3Storage()
 	client, err := grpc.NewClient(os.Getenv("PERMISSIONS_SERVICE_GRPC_URL"), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("failed to create permissions gRPC client: %v", err)
 	}
-	service := internal.NewFilesService(db, permissions.NewPermissionServiceClient(client))
+	service := internal.NewFilesService(db, permissions.NewPermissionServiceClient(client), storage)
 	controller := internal.NewFilesController(&service)
 
 	router := gin.Default()

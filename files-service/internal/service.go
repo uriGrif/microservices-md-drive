@@ -1,8 +1,10 @@
 package internal
 
 import (
+	"bytes"
 	"context"
 	"database/sql"
+	objectstorage "files-service/internal/object-storage"
 	permissions "files-service/protogen/golang"
 	"fmt"
 	"log"
@@ -18,9 +20,14 @@ import (
 type FilesService struct {
 	db                *sql.DB
 	permissionsClient permissions.PermissionServiceClient
+	objectStorage     objectstorage.ObjectStorage
 }
 
-func NewFilesService(db *sql.DB, permissionsClient permissions.PermissionServiceClient) FilesService {
+func NewFilesService(
+	db *sql.DB,
+	permissionsClient permissions.PermissionServiceClient,
+	objectStorage objectstorage.ObjectStorage,
+) FilesService {
 	if db == nil {
 		log.Fatal("failed to create files service: db handle is nil")
 	}
@@ -30,6 +37,7 @@ func NewFilesService(db *sql.DB, permissionsClient permissions.PermissionService
 	return FilesService{
 		db:                db,
 		permissionsClient: permissionsClient,
+		objectStorage:     objectStorage,
 	}
 }
 
@@ -39,13 +47,7 @@ func generateFileId() string {
 
 func (fs *FilesService) CreateFile(userId string, name string) (*File, error) {
 	// create file and owner permissions over it
-	query := "INSERT INTO files (id, user_id, name) VALUES (?, ?, ?)"
 	fileId := generateFileId()
-	_, err := fs.db.Exec(query, fileId, userId, name)
-	if err != nil {
-		return nil, err
-	}
-
 	md := metadata.Pairs("x-authenticated-user", userId)
 	ctxWithMetadata := metadata.NewOutgoingContext(context.Background(), md)
 	_, permissionErr := fs.permissionsClient.CreatePermission(ctxWithMetadata, &permissions.CreatePermissionRequest{
@@ -58,6 +60,16 @@ func (fs *FilesService) CreateFile(userId string, name string) (*File, error) {
 	if permissionErr != nil {
 		log.Printf("failed to create owner permission for file %s: %v", fileId, permissionErr)
 		return nil, permissionErr
+	}
+	objErr := fs.objectStorage.CreateObject(fileId, bytes.NewBufferString("").Bytes())
+	if objErr != nil {
+		log.Printf("failed to create object for file %s: %v", fileId, objErr)
+		return nil, objErr
+	}
+	query := "INSERT INTO files (id, user_id, name) VALUES (?, ?, ?)"
+	_, err := fs.db.Exec(query, fileId, userId, name)
+	if err != nil {
+		return nil, err
 	}
 	return &File{
 		Id:     fileId,
@@ -109,7 +121,7 @@ func (fs *FilesService) ListFilesByUser(userId string) ([]ListFile, error) {
 		permissionsMap[p.FileId] = p.Level
 	}
 
-	query := fmt.Sprintf("SELECT id, user_id, name, created_at FROM files WHERE id IN (%s)", strings.Repeat("?,", len(fileIds)-1)+"?")
+	query := fmt.Sprintf("SELECT id, user_id, name, created_at, updated_at FROM files WHERE id IN (%s)", strings.Repeat("?,", len(fileIds)-1)+"?")
 	rows, err := fs.db.Query(query, fileIds...)
 	if err != nil {
 		log.Printf("failed to list files for user %s: %v", userId, err)
@@ -121,7 +133,7 @@ func (fs *FilesService) ListFilesByUser(userId string) ([]ListFile, error) {
 	defer rows.Close()
 	for rows.Next() {
 		var file ListFile
-		err := rows.Scan(&file.Id, &file.OwnerId, &file.Name, &file.CreatedAt)
+		err := rows.Scan(&file.Id, &file.OwnerId, &file.Name, &file.CreatedAt, &file.UpdatedAt)
 		if err != nil {
 			log.Printf("failed to scan file row: %v", err)
 			return nil, err
@@ -133,7 +145,7 @@ func (fs *FilesService) ListFilesByUser(userId string) ([]ListFile, error) {
 	return result, nil
 }
 
-// update file metadata, not the content, that is managed by the files service
+// update file metadata, not the content, that is managed by the editor service
 func (fs *FilesService) UpdateFile(fileId string, userId string, file File) (File, error) {
 	md := metadata.Pairs("x-authenticated-user", userId)
 	ctxWithMetadata := metadata.NewOutgoingContext(context.Background(), md)
@@ -191,6 +203,11 @@ func (fs *FilesService) DeleteFile(fileId string, userId string) error {
 	if !slices.Contains(FileDeletePermissionLevels, permissionsRes.Permission.Level) {
 		log.Printf("user %s does not have permission to delete file %s", userId, fileId)
 		return ErrNotAuthorized
+	}
+	objErr := fs.objectStorage.DeleteObject(fileId)
+	if objErr != nil {
+		log.Printf("failed to delete object for file %s: %v", fileId, objErr)
+		return objErr
 	}
 	query := "DELETE FROM files WHERE id = ?"
 	res, err := fs.db.Exec(query, fileId)

@@ -2,8 +2,6 @@
 import btn from "../buttons/btn.vue";
 import userInfo from "./user-info.vue";
 import { RouterLink } from "vue-router";
-import { Home12Regular } from "@vicons/fluent";
-import { NIcon } from "naive-ui";
 import { useAuth0 } from "@auth0/auth0-vue";
 
 const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0();

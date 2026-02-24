@@ -36,7 +36,18 @@ const themeOverrides: GlobalThemeOverrides = {
 				optionTextColorActive: "var(--primary-dark-color)"
 			}
 		}
-	}
+	},
+	Card: {
+		colorModal: "var(--primary-light-color)",
+		borderRadius: "var(--border-radius)"
+	},
+	Dropdown: {
+		color: "var(--primary-light-color)", // Background color
+		textColor: "var(--primary-dark-color)", // Text color
+		optionColorHover: "var(--text-color)", // Hover background color
+		optionTextColorHover: "var(--primary-dark-color)", // Hover background color
+		optionTextColor: "var(--primary-dark-color)" // Option text color
+	},
 };
 
 export default themeOverrides;

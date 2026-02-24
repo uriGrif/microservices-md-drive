@@ -42,4 +42,10 @@ const handleClick = () => {
 	background-color: transparent;
 	color: var(--primary-light-color);
 }
+
+.secondary-btn {
+	background-color: var(--primary-dark-color);
+	border: 0px;
+	color: var(--text-color);
+}
 </style>

@@ -1,12 +1,12 @@
 import { watch } from "vue";
-import { useAuth0 } from "@auth0/auth0-vue";
-import { ApiError } from "../../services/api";
+import { ApiError } from "../../shared/api";
 import type { NavigationGuard } from "vue-router";
 import { getProfile } from "../../services/profiles";
 import { profileStore } from "../../stores/profile";
+import auth0Client from "../../shared/auth0-client";
 
 const profileGuard: NavigationGuard = async (to, _from, next) => {
-	const { isAuthenticated, user, isLoading } = useAuth0();
+	const { isAuthenticated, user, isLoading } = auth0Client;
 
 	// Wait for isLoading to become false
 	await new Promise<void>(resolve => {

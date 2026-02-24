@@ -8,7 +8,15 @@ export interface Profile {
 export interface File {
 	id: string;
 	name: string;
-	createdAt: string;
-	updatedAt: string;
+	created_at: string;
+	updated_at: string;
 	userId: string;
+}
+
+export interface CreateFileDTO {
+	name: string;
+}
+
+export interface EditFileDTO {
+	name: string;
 }
